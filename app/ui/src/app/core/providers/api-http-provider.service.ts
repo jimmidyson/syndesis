@@ -99,7 +99,16 @@ export class ApiHttpProviderService extends ApiHttpService {
     if (body) {
       for (const key in body) {
         if (body.hasOwnProperty(key)) {
-          multipartFormData.append(key, body[key]);
+          if (typeof body[key] === 'object') {
+            multipartFormData.append(key, new Blob(
+              [JSON.stringify(body[key])],
+              {
+                type: "application/json"
+              }
+            ));
+          } else {
+            multipartFormData.append(key, body[key]);
+          }
         }
       }
     }
